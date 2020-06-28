@@ -7,4 +7,4 @@ services:
     #/bin/sh
     volumes:
       - ./src:/src
-      - ./tests:/src/tests
+      - ./tests:/tests

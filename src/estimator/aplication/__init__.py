@@ -1,1 +1,1 @@
-from .route_estimator import RouteEstimator, RouteEstimatorAdapter, ResponseRouteEstimator
+from .route_estimator import RouteEstimator, RouteEstimatorRequest, ResponseRouteEstimator

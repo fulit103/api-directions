@@ -9,7 +9,7 @@ class ResponseRouteEstimator:
 class RouteEstimatorRequest(abc.ABC):
 
   @abc.abstractmethod
-  def estimate(self, points: List[Point]): ResponseRouteEstimator
+  def estimate(self, points: List[Point]) -> ResponseRouteEstimator:
     raise NotImplementedError
 
 """
@@ -20,5 +20,5 @@ class RouteEstimator:
   def __init__(self, adapter: RouteEstimatorRequest):
     self.adapter = adapter
 
-  def estimate(self, points: Set[Point]): ResponseRouteEstimator
+  def estimate(self, points: List[Point]) -> ResponseRouteEstimator:
     return self.adapter.estimate(points)
