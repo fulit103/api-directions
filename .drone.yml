@@ -10,6 +10,7 @@ steps:
         libressl-dev libffi-dev gcc musl-dev python3-dev \
     && pip install --upgrade pip setuptools wheel \    
     && rm -rf /root/.cache/pip
+  - ls
   - pip install -e /src
   - pip install -r requirements.txt
   - pytest . 
