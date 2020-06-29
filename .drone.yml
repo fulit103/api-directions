@@ -10,8 +10,10 @@ steps:
         libressl-dev libffi-dev gcc musl-dev python3-dev \
     && pip install --upgrade pip setuptools wheel \    
     && rm -rf /root/.cache/pip
-  - apk add curl
-  - curl --location --request POST 'http://chat.webspro.co/route' --header 'Content-Type:application/json' --data-raw '{"points":[[-74.072090, 4.710989], [-74.090984, 4.638023]],"instructions":false,"calc_points":false}'
+  # - apk add curl
+  # - curl --location --request POST 'http://chat.webspro.co/route' --header 'Content-Type:application/json' --data-raw '{"points":[[-74.072090, 4.710989], [-74.090984, 4.638023]],"instructions":false,"calc_points":false}'
+  - wget https://www.rapigo.co
+  - ls
   - pip install -e ./src
   - pip install -r requirements.txt
   - pytest ./tests 
