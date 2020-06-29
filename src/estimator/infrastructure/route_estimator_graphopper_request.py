@@ -21,7 +21,7 @@ class RouteEstimatorGraphopperRequest(RouteEstimatorRequest):
       "points": serialize_points(route.points),
       "instructions": False,
 	    "calc_points": False
-    })    
+    }, timeout=2)    
     response_json = response.json()    
     status_code = response.status_code
     if status_code==400:
