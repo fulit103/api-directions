@@ -1,15 +1,18 @@
 import abc
-from typing import List
-from estimator.domain import Point
+from typing import List, Optional
+from estimator.domain import Point, Route
 
 class ResponseRouteEstimator:
   distance: int
   time: int
+  def __init__(self, distance: int, time : int = None):
+    self.distance = distance
+    self.time = time
 
 class RouteEstimatorRequest(abc.ABC):
 
   @abc.abstractmethod
-  def estimate(self, points: List[Point]) -> ResponseRouteEstimator:
+  def estimate(self, route: Route) -> Optional[ResponseRouteEstimator]:
     raise NotImplementedError
 
 """
@@ -20,5 +23,5 @@ class RouteEstimator:
   def __init__(self, adapter: RouteEstimatorRequest):
     self.adapter = adapter
 
-  def estimate(self, points: List[Point]) -> ResponseRouteEstimator:
-    return self.adapter.estimate(points)
+  def estimate(self, route: Route) -> Optional[ResponseRouteEstimator]:
+    return self.adapter.estimate(route)

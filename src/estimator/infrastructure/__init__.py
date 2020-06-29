@@ -1,1 +1,1 @@
-from .route_estimator_graphopper_request import PointSerializer
+from .route_estimator_graphopper_request import *
