@@ -3,7 +3,7 @@ import pytest
 from estimator.domain import Point, Route
 from estimator.infrastructure import serialize_points, RouteEstimatorGraphopperRequest, PointOutOfBoundsException
 
-URL_GRAPHOPPER = "https://chat.webspro.co/route/"
+URL_GRAPHOPPER = "https://graphhopper.rapigo.co/route/"
 #URL_GRAPHOPPER = "https://www.rapigo.co/"
 
 def test_serialize_four_points():
