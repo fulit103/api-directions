@@ -1,7 +1,7 @@
 import pytest
 
 from estimator.domain import Point, Route
-from estimator.config import Settings()
+from estimator.config import Settings
 from estimator.infrastructure import serialize_points, RouteEstimatorGraphopperRequest, PointOutOfBoundsException
 
 settings = Settings()
