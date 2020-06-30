@@ -17,5 +17,5 @@ steps:
   - pip install -e ./src
   - pip install -r requirements.txt
   - pytest ./tests
-  environment:    
-    GRAPHHOPPER_API: https://graphhopper.rapigo.co/route      
+  environment:
+    GRAPHHOPPER_API: https://graphhopper.rapigo.co/route
