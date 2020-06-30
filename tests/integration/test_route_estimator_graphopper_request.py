@@ -40,6 +40,7 @@ def test_request_graphopper():
     Point(-74.072090, 4.710989),
     Point(-74.090984, 4.638023)
   ]
+  
   route = Route(points)
 
   request = RouteEstimatorGraphopperRequest(URL_GRAPHOPPER)
