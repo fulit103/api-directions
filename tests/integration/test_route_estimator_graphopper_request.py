@@ -1,10 +1,10 @@
 import pytest
 
 from estimator.domain import Point, Route
+from estimator.config import Settings
 from estimator.infrastructure import serialize_points, RouteEstimatorGraphopperRequest, PointOutOfBoundsException
 
-URL_GRAPHOPPER = "https://graphhopper.rapigo.co/route/"
-#URL_GRAPHOPPER = "https://www.rapigo.co/"
+settings = Settings()
 
 def test_serialize_four_points():
   points = [
@@ -40,10 +40,10 @@ def test_request_graphopper():
     Point(-74.072090, 4.710989),
     Point(-74.090984, 4.638023)
   ]
-  
+
   route = Route(points)
 
-  request = RouteEstimatorGraphopperRequest(URL_GRAPHOPPER)
+  request = RouteEstimatorGraphopperRequest(settings.graphhopper_api)
   response = request.estimate(route)
 
   assert response.distance>0
@@ -57,7 +57,7 @@ def test_request_graphopper_point_out_of_bounds():
   route = Route(points)
 
   with pytest.raises(PointOutOfBoundsException):
-    request = RouteEstimatorGraphopperRequest(URL_GRAPHOPPER)
+    request = RouteEstimatorGraphopperRequest(settings.graphhopper_api)
     response = request.estimate(route)
 
   
