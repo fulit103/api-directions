@@ -5,13 +5,9 @@ steps:
 - name: test
   image: python:3.8.1-alpine
   commands:
-  - set -eux \
-    && apk add --no-cache --virtual .build-deps build-base \
-        libressl-dev libffi-dev gcc musl-dev python3-dev \
-    && pip install --upgrade pip setuptools wheel \    
-    && rm -rf /root/.cache/pip
-  - wget https://www.rapigo.co
-  - ls
+  - set -eux
+  - apk add --no-cache --virtual .build-deps build-base libressl-dev libffi-dev gcc musl-dev python3-dev 
+  - pip install --upgrade pip setuptools wheel  
   - pip install -e ./src
   - pip install -r requirements.txt
   - pytest ./tests
