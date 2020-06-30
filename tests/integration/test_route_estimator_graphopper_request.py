@@ -39,7 +39,7 @@ def test_request_graphopper():
   ]
   route = Route(points)
 
-  request = RouteEstimatorGraphopperRequest("http://chat.webspro.co/route")
+  request = RouteEstimatorGraphopperRequest("https://chat.webspro.co/route")
   response = request.estimate(route)
 
   assert response.distance>0
@@ -53,7 +53,7 @@ def test_request_graphopper_point_out_of_bounds():
   route = Route(points)
 
   with pytest.raises(PointOutOfBoundsException):
-    request = RouteEstimatorGraphopperRequest("http://chat.webspro.co/route")
+    request = RouteEstimatorGraphopperRequest("https://chat.webspro.co/route")
     response = request.estimate(route)
 
   
