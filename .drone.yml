@@ -13,3 +13,13 @@ steps:
   - pytest ./tests
   environment:
     GRAPHHOPPER_API: https://graphhopper.rapigo.co/route
+
+- name: publish  
+  image: plugins/ecr
+  settings:
+    access_key: 
+      from_secret: aws_access_key
+    secret_key: 
+      from_secret: aws_secret_key
+    repo: rapigo/apidirections
+    registry: 957319530657.dkr.ecr.us-west-2.amazonaws.com
