@@ -1,6 +1,7 @@
 # app
 fastapi==0.58.0
 requests==2.24.0
+uvicorn==0.11.5
 
 # test
 pytest==5.4.3
