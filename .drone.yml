@@ -7,19 +7,19 @@ steps:
   commands:
   - set -eux
   - apk add --no-cache --virtual .build-deps build-base libressl-dev libffi-dev gcc musl-dev python3-dev 
-  - pip install --upgrade pip setuptools wheel  
+  - pip install --upgrade pip setuptools wheel
   - pip install -e ./src
   - pip install -r requirements.txt
   - pytest ./tests
   environment:
     GRAPHHOPPER_API: https://graphhopper.rapigo.co/route
 
-- name: publish  
+- name: publish
   image: plugins/ecr
   settings:
-    access_key: 
+    access_key:
       from_secret: AWS_ACCESS_KEY
-    secret_key: 
+    secret_key:
       from_secret: AWS_SECRET_KEY
     repo: rapigo/apidirections
     registry: 957319530657.dkr.ecr.us-west-2.amazonaws.com

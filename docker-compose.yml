@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     build: .
-    #command: ["/bin/sh", "-c", "tail -f /dev/null"]    
+    #command: ["/bin/sh", "-c", "tail -f /dev/null"]
     command: uvicorn estimator.entrypoints:app --reload --workers 1 --host 0.0.0.0 --port 8000
     volumes:
       - ./src:/src
