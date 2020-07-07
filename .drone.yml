@@ -13,6 +13,8 @@ steps:
   - pytest ./tests
   environment:
     GRAPHHOPPER_API: https://graphhopper.rapigo.co/route
+    GOOGLE_MATRIX_KEY:
+      from_secret: google_matrix_key
 
 - name: publish
   image: plugins/ecr

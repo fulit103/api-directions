@@ -4,6 +4,8 @@ from estimator.domain import Point, Route
 from estimator.config import Settings
 from estimator.infrastructure import serialize_points, RouteEstimatorGraphopperRequest, PointOutOfBoundsException, transform_distance
 
+from .utils import get_valid_route
+
 settings = Settings()
 
 def test_serialize_four_points():
@@ -36,12 +38,7 @@ def test_serialize_empty_points():
   assert len(data)==0
 
 def test_request_graphopper():
-  points = [
-    Point(-74.072090, 4.710989),
-    Point(-74.090984, 4.638023)
-  ]
-
-  route = Route(points)
+  route = get_valid_route()
 
   request = RouteEstimatorGraphopperRequest(settings.graphhopper_api)
   response = request.estimate(route)

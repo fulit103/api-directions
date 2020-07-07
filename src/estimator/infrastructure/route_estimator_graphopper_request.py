@@ -12,6 +12,9 @@ class PointOutOfBoundsException(Exception):
 def serialize_points(points: List[Point]):
   return [[point.longitude, point.latitude] for point in points ]
 
+"""
+ajusta la distancia para que paresca mas a la de google matrix
+"""
 def transform_distance(distance:float) -> int:
   decimals = distance - int(distance/1000.0)*1000
 
