@@ -1,11 +1,12 @@
+from estimator.aplication.redundant_route_estimator import RedundantRouteEstimator
+from estimator.infrastructure import RouteEstimatorGraphopperRequest, RouteEstimatorGoogleDirectionsRequest, \
+    RouteNotFoundException
 from fastapi import FastAPI, Header, HTTPException
 from typing import Optional
 
 from estimator.config import Settings
 from estimator.entrypoints.dto import EstimateRouteDTO, ResponseRouteDTO
 from estimator.domain import Route, Point, RouteTooSmallException, InvalidLongitudeException, InvalidLatitudeException
-from estimator.aplication import RouteNotFoundException
-from estimator.aplication import redundant_request_manager
 
 settings = Settings()
 app = FastAPI()
@@ -20,7 +21,13 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
     try:
         points = [Point(longitude=point.lon, latitude=point.lat) for point in route_dto.points]
         route = Route(points)
-        response = redundant_request_manager(route)
+        request_graphhopper = RouteEstimatorGraphopperRequest(settings.graphhopper_api)
+        request_google_directions = RouteEstimatorGoogleDirectionsRequest(settings.google_matrix_key)
+        route_estimator = RedundantRouteEstimator(
+            request1=request_graphhopper,
+            request2=request_google_directions
+        )
+        response = route_estimator.estimate(route)
         data = {"distance": response.distance, "time": response.time}
         return ResponseRouteDTO(**data)
     except InvalidLongitudeException as e:

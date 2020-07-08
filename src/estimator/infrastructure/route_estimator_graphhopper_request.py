@@ -3,7 +3,7 @@ from typing import List, Optional
 import math
 
 from estimator.domain import Point, Route
-from estimator.aplication import RouteEstimatorRequest, ResponseRouteEstimator, RouteNotFoundException
+from estimator.domain.adapters import RouteEstimatorRequest, ResponseRouteEstimator, RouteNotFoundException
 
 
 class PointOutOfBoundsException(Exception):

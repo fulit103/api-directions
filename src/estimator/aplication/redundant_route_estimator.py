@@ -1,30 +1,22 @@
 from typing import Optional
 
-from estimator.domain import Route
 from estimator.config import Settings
-
-from estimator.aplication import RouteEstimator, RouteNotFoundException, ResponseRouteEstimator
-from estimator.infrastructure import RouteEstimatorGraphopperRequest
-from estimator.infrastructure import RouteEstimatorGoogleDirectionsRequest
+from estimator.domain.adapters import RouteEstimatorRequest, ResponseRouteEstimator, RouteNotFoundException
 
 settings = Settings()
 
 
-def redundant_request_manager(route: Route) -> Optional[ResponseRouteEstimator]:
-    try:
-        request = RouteEstimatorGraphopperRequest(settings.graphhopper_api)
-        route_estimator = RouteEstimator(request)
+class RedundantRouteEstimator:
 
-        response = route_estimator.estimate(route)
+    def __init__(self, request1: RouteEstimatorRequest, request2: RouteEstimatorRequest):
+        self.request1 = request1
+        self.request2 = request2
 
-        return ResponseRouteEstimator(response.distance, response.time)
-    except Exception:
+    def estimate(self, route) -> Optional[ResponseRouteEstimator]:
         try:
-            request = RouteEstimatorGoogleDirectionsRequest(settings.google_matrix_key)
-            route_estimator = RouteEstimator(request)
-
-            response = route_estimator.estimate(route)
-
+            response = self.request1.estimate(route)
             return ResponseRouteEstimator(response.distance, response.time)
-        except RouteNotFoundException as rnfe:
-            raise RouteNotFoundException
+        except Exception:
+            response = self.request2.estimate(route)
+            return ResponseRouteEstimator(response.distance, response.time)
+

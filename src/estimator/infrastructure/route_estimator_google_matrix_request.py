@@ -2,7 +2,7 @@ import googlemaps
 from typing import Optional
 
 from estimator.domain import Route
-from estimator.aplication import RouteEstimatorRequest, ResponseRouteEstimator
+from estimator.domain.adapters import RouteEstimatorRequest, ResponseRouteEstimator
 
 from .google import point_to_json
 
