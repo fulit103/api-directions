@@ -26,7 +26,7 @@ def transform_distance(distance: float) -> int:
     return math.ceil(distance / 1000.0) * 1000
 
 
-class RouteEstimatorGraphopperRequest(RouteEstimatorRequest):
+class RouteEstimatorGraphhopperRequest(RouteEstimatorRequest):
 
     def __init__(self, url: str):
         self.url = url

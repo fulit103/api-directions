@@ -1,5 +1,5 @@
 from estimator.aplication.redundant_route_estimator import RedundantRouteEstimator
-from estimator.infrastructure import RouteEstimatorGraphopperRequest, RouteEstimatorGoogleDirectionsRequest, \
+from estimator.infrastructure import RouteEstimatorGraphhopperRequest, RouteEstimatorGoogleDirectionsRequest, \
     RouteNotFoundException
 from fastapi import FastAPI, Header, HTTPException
 from typing import Optional
@@ -21,7 +21,7 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
     try:
         points = [Point(longitude=point.lon, latitude=point.lat) for point in route_dto.points]
         route = Route(points)
-        request_graphhopper = RouteEstimatorGraphopperRequest(settings.graphhopper_api)
+        request_graphhopper = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
         request_google_directions = RouteEstimatorGoogleDirectionsRequest(settings.google_matrix_key)
         route_estimator = RedundantRouteEstimator(
             request1=request_graphhopper,

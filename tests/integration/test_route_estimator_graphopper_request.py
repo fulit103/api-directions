@@ -1,7 +1,7 @@
 import pytest
 from estimator.domain import Point, Route
 from estimator.config import Settings
-from estimator.infrastructure import serialize_points, RouteEstimatorGraphopperRequest, PointOutOfBoundsException, \
+from estimator.infrastructure import serialize_points, RouteEstimatorGraphhopperRequest, PointOutOfBoundsException, \
     transform_distance
 from .utils import get_valid_route
 
@@ -42,7 +42,7 @@ def test_serialize_empty_points():
 def test_request_graphopper():
     route = get_valid_route()
 
-    request = RouteEstimatorGraphopperRequest(settings.graphhopper_api)
+    request = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
     response = request.estimate(route)
 
     assert response.distance > 0
@@ -57,7 +57,7 @@ def test_request_graphopper_point_out_of_bounds():
     route = Route(points)
 
     with pytest.raises(PointOutOfBoundsException):
-        request = RouteEstimatorGraphopperRequest(settings.graphhopper_api)
+        request = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
         response = request.estimate(route)
 
 
