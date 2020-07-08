@@ -8,3 +8,7 @@ export GOOGLE_MATRIX_KEY=
 docker exec -it api-directions_web_1 pytest /tests
 
 # rename src/.env.test to src/.env
+
+# create virtualenv
+
+python3 -m venv .venv
