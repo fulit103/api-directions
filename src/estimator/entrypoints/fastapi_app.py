@@ -3,6 +3,7 @@ from estimator.infrastructure import RouteEstimatorGraphhopperRequest, RouteEsti
     RouteNotFoundException
 from fastapi import FastAPI, Header, HTTPException
 from typing import Optional
+from fastapi.middleware.cors import CORSMiddleware
 
 from estimator.config import Settings
 from estimator.entrypoints.dto import EstimateRouteDTO, ResponseRouteDTO
@@ -11,6 +12,20 @@ from estimator.domain import Route, Point, RouteTooSmallException, InvalidLongit
 settings = Settings()
 app = FastAPI()
 
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/route", response_model=ResponseRouteDTO)
 def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None)):
@@ -19,6 +34,7 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
         raise HTTPException(status_code=401, detail="Unauthorized user")
 
     try:
+        print(route_dto)
         points = [Point(longitude=point.lon, latitude=point.lat) for point in route_dto.points]
         route = Route(points)
         request_graphhopper = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
@@ -39,4 +55,10 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
     except RouteNotFoundException as e:
         raise HTTPException(status_code=400, detail=e)
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail=e)
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=1212)
