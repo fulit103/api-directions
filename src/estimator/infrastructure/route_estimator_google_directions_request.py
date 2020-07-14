@@ -31,4 +31,4 @@ class RouteEstimatorGoogleDirectionsRequest(RouteEstimatorRequest):
             distance = distance + leg["distance"]["value"]
             duration = distance + leg["duration"]["value"]
 
-        return ResponseRouteEstimator(distance, duration)
+        return ResponseRouteEstimator(int(distance/1000), duration)

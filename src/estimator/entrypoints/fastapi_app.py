@@ -13,10 +13,7 @@ settings = Settings()
 app = FastAPI()
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
+    settings.cors
 ]
 
 app.add_middleware(
@@ -33,10 +30,9 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
     if x_auth_token != settings.auth_token:
         raise HTTPException(status_code=401, detail="Unauthorized user")
 
-    try:
-        print(route_dto)
+    try:        
         points = [Point(longitude=point.lon, latitude=point.lat) for point in route_dto.points]
-        route = Route(points)
+        route = Route(points)        
         request_graphhopper = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
         request_google_directions = RouteEstimatorGoogleDirectionsRequest(settings.google_matrix_key)
         route_estimator = RedundantRouteEstimator(

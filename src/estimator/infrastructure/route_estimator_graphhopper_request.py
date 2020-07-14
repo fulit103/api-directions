@@ -54,6 +54,6 @@ class RouteEstimatorGraphhopperRequest(RouteEstimatorRequest):
             if distance == 0:
                 raise RouteNotFoundException()
 
-            return ResponseRouteEstimator(int(distance), time=int(time))
+            return ResponseRouteEstimator(int(distance/1000.0), time=int(time))
         else:
             return None
