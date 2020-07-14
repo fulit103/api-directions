@@ -12,9 +12,7 @@ from estimator.domain import Route, Point, RouteTooSmallException, InvalidLongit
 settings = Settings()
 app = FastAPI()
 
-origins = [
-    settings.cors
-]
+origins = settings.cors.split(",")
 
 app.add_middleware(
     CORSMiddleware,
