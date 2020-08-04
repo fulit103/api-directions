@@ -41,7 +41,6 @@ class RouteEstimatorGraphhopperRequest(RouteEstimatorRequest):
             "avoid": "secondary"
         }, timeout=2)
         response_json = response.json()
-        print(response_json)
         status_code = response.status_code
         if status_code == 400:
             if response_json["hints"][0]["details"] == "com.graphhopper.util.exceptions.PointOutOfBoundsException":

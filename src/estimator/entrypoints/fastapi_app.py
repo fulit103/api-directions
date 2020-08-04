@@ -49,7 +49,6 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
     except RouteNotFoundException as e:
         raise HTTPException(status_code=400, detail=e)
     except Exception as e:
-        print(e)
         raise HTTPException(status_code=400, detail=e)
 
 
