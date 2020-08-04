@@ -60,6 +60,7 @@ def test_request_graphhopper_point_out_of_bounds():
         request = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
         request.estimate(route)
 
+
 def test_request_graphhopper_distance_0():
     points = [
         Point(-75.566564, 6.246225),
