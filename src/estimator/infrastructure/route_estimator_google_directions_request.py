@@ -13,7 +13,6 @@ class RouteEstimatorGoogleDirectionsRequest(RouteEstimatorRequest):
         self.client = googlemaps.Client(key=key)
 
     def estimate(self, route: Route) -> Optional[ResponseRouteEstimator]:
-
         origin = point_to_json(route.origin())
         destination = point_to_json(route.destination())
         waypoints = [point_to_json(p) for p in route.waypoints()] if route.waypoints() != None else None
@@ -30,5 +29,9 @@ class RouteEstimatorGoogleDirectionsRequest(RouteEstimatorRequest):
         for leg in legs:
             distance = distance + leg["distance"]["value"]
             duration = distance + leg["duration"]["value"]
+
+        distance = int(distance/1000)
+        if distance == 0:
+            distance = 1
 
         return ResponseRouteEstimator(distance, duration)

@@ -3,6 +3,7 @@ from estimator.infrastructure import RouteEstimatorGraphhopperRequest, RouteEsti
     RouteNotFoundException
 from fastapi import FastAPI, Header, HTTPException
 from typing import Optional
+from fastapi.middleware.cors import CORSMiddleware
 
 from estimator.config import Settings
 from estimator.entrypoints.dto import EstimateRouteDTO, ResponseRouteDTO
@@ -11,6 +12,15 @@ from estimator.domain import Route, Point, RouteTooSmallException, InvalidLongit
 settings = Settings()
 app = FastAPI()
 
+origins = settings.cors.split(",")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/route", response_model=ResponseRouteDTO)
 def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None)):
@@ -18,9 +28,9 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
     if x_auth_token != settings.auth_token:
         raise HTTPException(status_code=401, detail="Unauthorized user")
 
-    try:
+    try:        
         points = [Point(longitude=point.lon, latitude=point.lat) for point in route_dto.points]
-        route = Route(points)
+        route = Route(points)        
         request_graphhopper = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
         request_google_directions = RouteEstimatorGoogleDirectionsRequest(settings.google_matrix_key)
         route_estimator = RedundantRouteEstimator(
@@ -40,3 +50,8 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
         raise HTTPException(status_code=400, detail=e)
     except Exception as e:
         raise HTTPException(status_code=400, detail=e)
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=1212)
