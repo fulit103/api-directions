@@ -1,4 +1,5 @@
 from estimator.aplication.redundant_route_estimator import RedundantRouteEstimator
+from estimator.entrypoints.dto.geocoder_dto import GeocoderResponse, AddressDTO
 from estimator.infrastructure import RouteEstimatorGraphhopperRequest, RouteEstimatorGoogleDirectionsRequest, \
     RouteNotFoundException
 from fastapi import FastAPI, Header, HTTPException
@@ -21,6 +22,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.post("/geocoder", response_model=GeocoderResponse)
+async def geocoder(address_dto: AddressDTO):
+
+    return GeocoderResponse( lat=0, lon=0)
+
 
 @app.post("/route", response_model=ResponseRouteDTO)
 def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None)):
