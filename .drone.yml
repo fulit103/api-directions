@@ -15,6 +15,8 @@ steps:
     GRAPHHOPPER_API: https://graphhopper.rapigo.co/route
     GOOGLE_MATRIX_KEY:
       from_secret: google_matrix_key
+    GOOGLE_GEOCODER_KEY
+      from_secret: google_geocoder_key
 
 - name: publish
   image: plugins/ecr
