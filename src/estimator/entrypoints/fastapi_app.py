@@ -27,7 +27,11 @@ app.add_middleware(
 
 
 @app.post("/geocoder", response_model=GeocoderResponse)
-async def geocoder(addresses: AddressList):
+async def geocoder(addresses: AddressList, x_auth_token: Optional[str] = Header(None)):
+
+    if x_auth_token != settings.auth_token:
+        raise HTTPException(status_code=401, detail="Unauthorized user")
+
     repository = GoogleGeocoderRepository(key=settings.google_geocoder_key)
     use_case = ParallelGeocoder(repository)
     points: List[Point] = await use_case.execute([
