@@ -1,8 +1,11 @@
+from estimator.aplication.parallel_geocoder import ParallelGeocoder
 from estimator.aplication.redundant_route_estimator import RedundantRouteEstimator
+from estimator.entrypoints.dto.geocoder_dto import GeocoderResponse, AddressDTO, AddressList, PointDTO
 from estimator.infrastructure import RouteEstimatorGraphhopperRequest, RouteEstimatorGoogleDirectionsRequest, \
     RouteNotFoundException
+from estimator.infrastructure.google_geocoder_repository import GoogleGeocoderRepository
 from fastapi import FastAPI, Header, HTTPException
-from typing import Optional
+from typing import Optional, List
 from fastapi.middleware.cors import CORSMiddleware
 
 from estimator.config import Settings
@@ -21,6 +24,28 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.post("/geocoder", response_model=GeocoderResponse)
+async def geocoder(addresses: AddressList, x_auth_token: Optional[str] = Header(None)):
+
+    if x_auth_token != settings.auth_token:
+        raise HTTPException(status_code=401, detail="Unauthorized user")
+
+    repository = GoogleGeocoderRepository(key=settings.google_geocoder_key)
+    use_case = ParallelGeocoder(repository)
+    points: List[Point] = await use_case.execute([
+       f"{address_dto.address}, {address_dto.city}, {address_dto.country}" for address_dto in addresses.addresses
+    ])
+    return GeocoderResponse(
+        addresses=[
+            PointDTO(
+                lat=point.latitude,
+                lnt=point.longitude
+            ) for point in points
+        ]
+    )
+
 
 @app.post("/route", response_model=ResponseRouteDTO)
 def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None)):

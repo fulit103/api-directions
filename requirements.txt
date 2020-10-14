@@ -1,8 +1,10 @@
 # app
-fastapi==0.58.0
+fastapi==0.61.1
 requests==2.24.0
-uvicorn==0.11.5
-googlemaps==4.4.1
+uvicorn==0.12.1
+googlemaps==4.4.2
+aiogmaps==0.0.2
 
 # test
-pytest==5.4.3
+pytest==6.1.1
+pytest-asyncio==0.14.0
