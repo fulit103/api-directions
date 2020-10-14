@@ -1,9 +1,11 @@
+from estimator.aplication.parallel_geocoder import ParallelGeocoder
 from estimator.aplication.redundant_route_estimator import RedundantRouteEstimator
-from estimator.entrypoints.dto.geocoder_dto import GeocoderResponse, AddressDTO
+from estimator.entrypoints.dto.geocoder_dto import GeocoderResponse, AddressDTO, AddressList, PointDTO
 from estimator.infrastructure import RouteEstimatorGraphhopperRequest, RouteEstimatorGoogleDirectionsRequest, \
     RouteNotFoundException
+from estimator.infrastructure.google_geocoder_repository import GoogleGeocoderRepository
 from fastapi import FastAPI, Header, HTTPException
-from typing import Optional
+from typing import Optional, List
 from fastapi.middleware.cors import CORSMiddleware
 
 from estimator.config import Settings
@@ -25,9 +27,20 @@ app.add_middleware(
 
 
 @app.post("/geocoder", response_model=GeocoderResponse)
-async def geocoder(address_dto: AddressDTO):
-
-    return GeocoderResponse( lat=0, lon=0)
+async def geocoder(addresses: AddressList):
+    repository = GoogleGeocoderRepository(key=settings.google_geocoder_key)
+    use_case = ParallelGeocoder(repository)
+    points: List[Point] = await use_case.execute([
+       f"{address_dto.address}, {address_dto.city}, {address_dto.country}" for address_dto in addresses.addresses
+    ])
+    return GeocoderResponse(
+        addresses=[
+            PointDTO(
+                lat=point.latitude,
+                lnt=point.longitude
+            ) for point in points
+        ]
+    )
 
 
 @app.post("/route", response_model=ResponseRouteDTO)

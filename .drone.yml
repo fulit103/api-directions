@@ -26,3 +26,9 @@ steps:
     repo: rapigo/apidirections
     registry: 957319530657.dkr.ecr.us-west-2.amazonaws.com
     region: us-west-2
+  when:
+    event:
+      branch:
+      - master
+      exclude:
+      - pull_request
