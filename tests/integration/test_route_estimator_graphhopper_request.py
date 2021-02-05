@@ -49,6 +49,24 @@ def test_request_graphopper():
     assert response.time > 0
 
 
+def test_request_graphopper_optimize():
+    points = [
+        Point(-75.71378409,4.80899459),
+        Point(-75.71451885,4.81067301),
+        Point(-75.71212962,4.80898457),
+        Point(-75.7114867,4.807989399999999)
+    ]
+    route = Route(points)
+
+    request = RouteEstimatorGraphhopperRequest("https://graphhopper.com/api/1/route?key=9cf6fbe5-2ab9-4c19-bdce-3ce707da3d92")
+    response = request.estimate(route, optimize=True)
+
+    assert response.distance > 0
+    assert response.time > 0
+
+    assert [0, 2, 1, 3] == response.points_order
+
+
 def test_request_graphhopper_point_out_of_bounds():
     points = [
         Point(-74.072090, 4.710989),

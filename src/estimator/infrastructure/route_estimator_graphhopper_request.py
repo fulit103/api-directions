@@ -31,15 +31,23 @@ class RouteEstimatorGraphhopperRequest(RouteEstimatorRequest):
     def __init__(self, url: str):
         self.url = url
 
-    def estimate(self, route: Route) -> Optional[ResponseRouteEstimator]:
-        response = requests.post(self.url, json={
+    def estimate(self, route: Route, optimize: bool = False) -> Optional[ResponseRouteEstimator]:
+        parameters = {
             "points": serialize_points(route.points),
             "instructions": False,
             "calc_points": False,
             "elevation": True,
             "vehicle": "car",
             "avoid": "secondary"
-        }, timeout=2)
+        }
+
+        if optimize is True:
+            parameters["optimize"] = "true"
+            # parameters["avoid"] = "secondary"
+            # parameters["ch.disable"] = True
+            # parameters["Weighting"] = "short_fastes"
+
+        response = requests.post(self.url, json=parameters, timeout=2)
         response_json = response.json()
         status_code = response.status_code
         if status_code == 400:
@@ -49,10 +57,14 @@ class RouteEstimatorGraphhopperRequest(RouteEstimatorRequest):
         if status_code == 200:
             distance = transform_distance(response_json["paths"][0]["distance"])
             time = response_json["paths"][0]["time"]
+            points_order = None
+
+            if optimize is True:
+                points_order = response_json["paths"][0]["points_order"]
 
             if distance == 0:
                 raise RouteNotFoundException()
 
-            return ResponseRouteEstimator(int(distance/1000.0), time=int(time))
+            return ResponseRouteEstimator(int(distance/1000.0), time=int(time), points_order=points_order)
         else:
             return None
