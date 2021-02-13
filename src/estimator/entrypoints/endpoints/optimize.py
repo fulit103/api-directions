@@ -1,7 +1,7 @@
 from estimator.aplication.redundant_route_estimator import RedundantRouteEstimator
-from typing import List
+from typing import List, Optional
 from app.boostrap import settings
-from fastapi import HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter, Header
 from pydantic.main import BaseModel
 from estimator.entrypoints.dto import EstimateRouteDTO, ResponseRouteDTO
 from estimator.domain import Point, Route, RouteTooSmallException, InvalidLongitudeException, InvalidLatitudeException
@@ -25,14 +25,17 @@ class ResponseRouteOptimized(BaseModel):
 
 
 @router.post("/optimize")
-def optimize(route_optimizer: EstimateRouteDTO):
+def optimize(route_optimizer: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None)):
+
+    if x_auth_token != settings.auth_token:
+        raise HTTPException(status_code=401, detail="Unauthorized user")
 
     try:
         points = [Point(longitude=point.lon, latitude=point.lat)
                   for point in route_optimizer.points]
         route = Route(points)
         request_graphhopper = RouteEstimatorGraphhopperRequest(
-            'https://graphhopper.com/api/1/route?key=9cf6fbe5-2ab9-4c19-bdce-3ce707da3d92')
+            settings.graphhopper_api_optimizate)
         r = request_graphhopper.estimate(route, optimize=True)
         return {"points": r.points_order}
     except InvalidLongitudeException as e:
