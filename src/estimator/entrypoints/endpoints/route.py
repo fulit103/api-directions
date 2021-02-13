@@ -17,10 +17,13 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
         raise HTTPException(status_code=401, detail="Unauthorized user")
 
     try:
-        points = [Point(longitude=point.lon, latitude=point.lat) for point in route_dto.points]
+        points = [Point(longitude=point.lon, latitude=point.lat)
+                  for point in route_dto.points]
         route = Route(points)
-        request_graphhopper = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
-        request_google_directions = RouteEstimatorGoogleDirectionsRequest(settings.google_matrix_key)
+        request_graphhopper = RouteEstimatorGraphhopperRequest(
+            settings.graphhopper_api)
+        request_google_directions = RouteEstimatorGoogleDirectionsRequest(
+            settings.google_matrix_key)
         route_estimator = RedundantRouteEstimator(
             request1=request_graphhopper,
             request2=request_google_directions
