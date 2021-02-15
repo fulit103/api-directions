@@ -3,28 +3,14 @@ from typing import List, Optional
 from app.boostrap import settings
 from fastapi import HTTPException, APIRouter, Header
 from pydantic.main import BaseModel
-from estimator.entrypoints.dto import EstimateRouteDTO, ResponseRouteDTO
+from estimator.entrypoints.dto import EstimateRouteDTO, ResponseRouteOptimize
 from estimator.domain import Point, Route, RouteTooSmallException, InvalidLongitudeException, InvalidLatitudeException
 from estimator.infrastructure import RouteEstimatorGraphhopperRequest, RouteEstimatorGoogleDirectionsRequest, RouteNotFoundException
 
 router = APIRouter()
 
 
-class PointDTO(BaseModel):
-    lat: float
-    lon: float
-    key: str
-
-
-class RouteDTO(BaseModel):
-    points: List[PointDTO]
-
-
-class ResponseRouteOptimized(BaseModel):
-    keys: List[str]
-
-
-@router.post("/optimize")
+@router.post("/optimize", response_model=ResponseRouteOptimize)
 def optimize(route_optimizer: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None)):
 
     if x_auth_token != settings.auth_token:
