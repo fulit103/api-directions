@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from estimator.config import Settings
 
-from estimator.entrypoints import app
+from app.fastapi import app
 
 client = TestClient(app)
 
