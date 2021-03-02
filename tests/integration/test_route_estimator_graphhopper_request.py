@@ -58,7 +58,7 @@ def test_request_graphopper_optimize():
     ]
     route = Route(points)
 
-    request = RouteEstimatorGraphhopperRequest("https://graphhopper.com/api/1/route?key=9cf6fbe5-2ab9-4c19-bdce-3ce707da3d92")
+    request = RouteEstimatorGraphhopperRequest("https://graphhopper.com/api/1/route?key=9cf6fbe5-2ab9")
     response = request.estimate(route, optimize=True)
 
     assert response.distance > 0
