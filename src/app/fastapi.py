@@ -8,15 +8,28 @@ origins = settings.cors.split(",")
 
 app = FastAPI()
 
+"""
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
+)"""
 
 app.include_router(api.api_router)
+
+from starlette.middleware.cors import CORSMiddleware
+
+origins = ["*"]
+app = CORSMiddleware(
+    app=app,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 if __name__ == "__main__":
     import uvicorn
