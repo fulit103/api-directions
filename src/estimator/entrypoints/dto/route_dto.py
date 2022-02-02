@@ -8,6 +8,7 @@ class PointDTO(BaseModel):
 
 
 class EstimateRouteDTO(BaseModel):
+    transform_distance:  Optional[bool] = True
     points: List[PointDTO]
     country: str = "colombia"
 

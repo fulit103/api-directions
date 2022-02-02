@@ -21,9 +21,13 @@ def route(route_dto: EstimateRouteDTO, x_auth_token: Optional[str] = Header(None
                   for point in route_dto.points]
         route = Route(points)
         request_graphhopper = RouteEstimatorGraphhopperRequest(
-            settings.graphhopper_api)
+            settings.graphhopper_api,  route_dto.transform_distance
+        )
+
         request_google_directions = RouteEstimatorGoogleDirectionsRequest(
-            settings.google_matrix_key)
+            settings.google_matrix_key, route_dto.transform_distance
+        )
+
         route_estimator = RedundantRouteEstimator(
             request1=request_graphhopper,
             request2=request_google_directions

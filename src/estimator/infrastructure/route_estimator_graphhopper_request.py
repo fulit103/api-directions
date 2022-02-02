@@ -14,22 +14,29 @@ def serialize_points(points: List[Point]):
     return [[point.longitude, point.latitude] for point in points]
 
 
-def transform_distance(distance: float) -> int:
+def build_distance(distance: float, transform_distance: bool) -> int:
+
     decimals = distance - int(distance / 1000.0) * 1000
 
+    if transform_distance:
+        calculation = math.ceil(distance / 1000.0)
+    else:
+        calculation = distance / 1000.0
+
     if 0 < decimals < 500:
-        return math.ceil(distance / 1000.0) * 1000
+        return calculation * 1000
 
     if decimals > 500:
-        return math.ceil(distance / 1000.0) * 1000 + 1000
+        return calculation * 1000 + 1000
 
-    return math.ceil(distance / 1000.0) * 1000
+    return calculation * 1000
 
 
 class RouteEstimatorGraphhopperRequest(RouteEstimatorRequest):
 
-    def __init__(self, url: str):
+    def __init__(self, url: str, transform_distance: bool):
         self.url = url
+        self.transform_distance = transform_distance
 
     def estimate(self, route: Route, optimize: bool = False) -> Optional[ResponseRouteEstimator]:
         parameters = {
@@ -55,16 +62,21 @@ class RouteEstimatorGraphhopperRequest(RouteEstimatorRequest):
                 raise PointOutOfBoundsException(response_json["message"])
 
         if status_code == 200:
-            distance = transform_distance(response_json["paths"][0]["distance"])
+            distance = build_distance(response_json["paths"][0]["distance"], self.transform_distance)
             time = response_json["paths"][0]["time"]
             points_order = None
 
             if optimize is True:
                 points_order = response_json["paths"][0]["points_order"]
-
+            
+            if self.transform_distance:
+                distance = int(distance/1000)
+            else:
+                distance = "{:.1f}".format(distance/1000)
+            
             if distance == 0:
                 raise RouteNotFoundException()
 
-            return ResponseRouteEstimator(int(distance/1000.0), time=int(time), points_order=points_order)
+            return ResponseRouteEstimator(distance, time=int(time), points_order=points_order)
         else:
             return None

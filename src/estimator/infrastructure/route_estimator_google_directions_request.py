@@ -9,8 +9,9 @@ from .google import point_to_json
 
 class RouteEstimatorGoogleDirectionsRequest(RouteEstimatorRequest):
 
-    def __init__(self, key: str):
+    def __init__(self, key: str, transform_distance: bool):
         self.client = googlemaps.Client(key=key)
+        self.transform_distance = transform_distance
 
     def estimate(self, route: Route) -> Optional[ResponseRouteEstimator]:
         origin = point_to_json(route.origin())
@@ -30,7 +31,11 @@ class RouteEstimatorGoogleDirectionsRequest(RouteEstimatorRequest):
             distance = distance + leg["distance"]["value"]
             duration = distance + leg["duration"]["value"]
 
-        distance = int(distance/1000)
+        if self.transform_distance:
+            distance = int(distance/1000)
+        else:
+            distance = "{:.1f}".format(distance/1000)
+
         if distance == 0:
             distance = 1
 

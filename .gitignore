@@ -40,3 +40,5 @@ __pycache__
 .idea/**/libraries
 .idea
 venv
+
+.DS_Store
