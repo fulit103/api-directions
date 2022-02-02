@@ -23,13 +23,18 @@ def build_distance(distance: float, transform_distance: bool) -> int:
     else:
         calculation = distance / 1000.0
 
+    response = 0
     if 0 < decimals < 500:
-        return calculation * 1000
+        response = calculation * 1000
+    elif decimals > 500:
+        response = calculation * 1000 + 1000
+    else:
+        response = calculation * 1000
 
-    if decimals > 500:
-        return calculation * 1000 + 1000
-
-    return calculation * 1000
+    if transform_distance:
+        return int(response/1000)
+    else:
+        return  float( "{:.1f}".format(response/1000))
 
 
 class RouteEstimatorGraphhopperRequest(RouteEstimatorRequest):
@@ -68,11 +73,6 @@ class RouteEstimatorGraphhopperRequest(RouteEstimatorRequest):
 
             if optimize is True:
                 points_order = response_json["paths"][0]["points_order"]
-            
-            if self.transform_distance:
-                distance = int(distance/1000)
-            else:
-                distance = "{:.1f}".format(distance/1000)
             
             if distance == 0:
                 raise RouteNotFoundException()

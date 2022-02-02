@@ -42,7 +42,7 @@ def test_serialize_empty_points():
 def test_request_graphopper():
     route = get_valid_route()
 
-    request = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
+    request = RouteEstimatorGraphhopperRequest(settings.graphhopper_api, True)
     response = request.estimate(route)
 
     assert response.distance > 0
@@ -58,7 +58,7 @@ def test_request_graphopper_optimize():
     ]
     route = Route(points)
 
-    request = RouteEstimatorGraphhopperRequest("https://graphhopper.com/api/1/route?key=9cf6fbe5-2ab9")
+    request = RouteEstimatorGraphhopperRequest("https://graphhopper.com/api/1/route?key=9cf6fbe5-2ab9", True)
     response = request.estimate(route, optimize=True)
 
     # assert response.distance > 0
@@ -75,7 +75,7 @@ def test_request_graphhopper_point_out_of_bounds():
     route = Route(points)
 
     with pytest.raises(PointOutOfBoundsException):
-        request = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
+        request = RouteEstimatorGraphhopperRequest(settings.graphhopper_api, True)
         request.estimate(route)
 
 
@@ -87,19 +87,23 @@ def test_request_graphhopper_distance_0():
     route = Route(points)
 
     with pytest.raises(RouteNotFoundException):
-        request = RouteEstimatorGraphhopperRequest(settings.graphhopper_api)
+        request = RouteEstimatorGraphhopperRequest(settings.graphhopper_api, True)
         request.estimate(route)
 
 
 def test_build_distance():
-    assert build_distance(1000) == 1000
-    assert build_distance(1001) == 2000
-    assert build_distance(1501) == 3000
+    assert build_distance(1000, True) == 1
+    assert build_distance(1001, True) == 2
+    assert build_distance(1501, True) == 3
 
-    assert build_distance(3000) == 3000
-    assert build_distance(3001) == 4000
-    assert build_distance(3501) == 5000
+    assert build_distance(3000, True) == 3
+    assert build_distance(3001, True) == 4
+    assert build_distance(3501, True) == 5
 
-    assert build_distance(9000) == 9000
-    assert build_distance(9001) == 10000
-    assert build_distance(9501) == 11000
+    assert build_distance(9000, True) == 9
+    assert build_distance(9001, True) == 10
+    assert build_distance(9501, True) == 11
+
+    assert build_distance(1224.167, True) == 2
+    assert build_distance(1224.167, False) == 1.2
+

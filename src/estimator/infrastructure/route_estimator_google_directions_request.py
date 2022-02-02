@@ -34,7 +34,7 @@ class RouteEstimatorGoogleDirectionsRequest(RouteEstimatorRequest):
         if self.transform_distance:
             distance = int(distance/1000)
         else:
-            distance = "{:.1f}".format(distance/1000)
+            distance = float("{:.1f}".format(distance/1000))
 
         if distance == 0:
             distance = 1

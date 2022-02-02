@@ -7,7 +7,7 @@ settings = Settings()
 
 def test_request_google_matrix():
     route = get_valid_route()
-    request = RouteEstimatorGoogleDirectionsRequest(key=settings.google_matrix_key)
+    request = RouteEstimatorGoogleDirectionsRequest(key=settings.google_matrix_key, transform_distance=True)
     response = request.estimate(route)
 
     print(f"distance: {response.distance} , duration: {response.time}")
